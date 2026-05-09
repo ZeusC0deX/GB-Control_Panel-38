@@ -26,16 +26,16 @@ document.addEventListener('DOMContentLoaded', () => {
     let unreadNotifs = 0;
     const addNotification = (title, msg, type = 'info') => {
         const notifList = document.getElementById('notif-list');
-        if(!notifList) return;
+        if (!notifList) return;
         const emptyMsg = document.getElementById('notif-empty');
         if (emptyMsg) emptyMsg.style.display = 'none';
 
         const time = new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
         let icon = 'ℹ️';
-        if(type === 'success') icon = '✅';
-        if(type === 'warn') icon = '⚠️';
-        if(type === 'error') icon = '🚨';
-        if(title === 'Aurora AI') icon = '🌿';
+        if (type === 'success') icon = '✅';
+        if (type === 'warn') icon = '⚠️';
+        if (type === 'error') icon = '🚨';
+        if (title === 'Aurora AI') icon = '🌿';
 
         const notifHtml = `
             <div class="notif-item unread">
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         unreadNotifs++;
         const badge = document.getElementById('notif-badge');
-        if(badge) {
+        if (badge) {
             badge.textContent = unreadNotifs;
             badge.style.display = 'flex';
         }
@@ -56,14 +56,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const notifBtn = document.getElementById('notif-btn');
     const notifDropdown = document.getElementById('notif-dropdown');
-    
+
     notifBtn?.addEventListener('click', (e) => {
         e.stopPropagation();
         notifDropdown.classList.toggle('show');
         if (notifDropdown.classList.contains('show')) {
             unreadNotifs = 0;
             const badge = document.getElementById('notif-badge');
-            if(badge) badge.style.display = 'none';
+            if (badge) badge.style.display = 'none';
             document.querySelectorAll('.notif-item.unread').forEach(el => el.classList.remove('unread'));
         }
     });
@@ -77,10 +77,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('notif-clear')?.addEventListener('click', (e) => {
         e.stopPropagation();
         const notifList = document.getElementById('notif-list');
-        if(notifList) notifList.innerHTML = '<div class="notif-empty" id="notif-empty">Henüz bildirim yok.</div>';
+        if (notifList) notifList.innerHTML = '<div class="notif-empty" id="notif-empty">Henüz bildirim yok.</div>';
         unreadNotifs = 0;
         const badge = document.getElementById('notif-badge');
-        if(badge) badge.style.display = 'none';
+        if (badge) badge.style.display = 'none';
     });
 
     // ==== 4. SENSOR SIMULATOR ====
@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize history
     sensors.forEach(s => {
-        for(let i=0; i<60; i++) { s.history.push(s.value + (Math.random() * 0.4 - 0.2)); }
+        for (let i = 0; i < 60; i++) { s.history.push(s.value + (Math.random() * 0.4 - 0.2)); }
     });
 
     const activeWarnings = new Set();
@@ -111,18 +111,18 @@ document.addEventListener('DOMContentLoaded', () => {
         sensors.forEach(s => {
             let force = 0;
             // Apply physics based on controls (50 is neutral)
-            if(s.id === 'light') force = (cLight - 50) * 1.5; 
-            if(s.id === 'water') force = (cPump - 50) * 0.5; 
-            if(s.id === 'temp') force = (50 - cFan) * 0.05; 
-            if(s.id === 'humidity') force = (50 - cFan) * 0.15; 
-            if(s.id === 'ec') force = (cNutrient - 50) * 0.02; 
-            if(s.id === 'ph') force = (cPh - 50) * 0.02; 
+            if (s.id === 'light') force = (cLight - 50) * 1.5;
+            if (s.id === 'water') force = (cPump - 50) * 0.5;
+            if (s.id === 'temp') force = (50 - cFan) * 0.05;
+            if (s.id === 'humidity') force = (50 - cFan) * 0.15;
+            if (s.id === 'ec') force = (cNutrient - 50) * 0.02;
+            if (s.id === 'ph') force = (cPh - 50) * 0.02;
 
             // Natural drift towards target if controls are neutral
             const target = s.getTarget();
             const pullToTarget = (target.target - s.value) * 0.02;
             const randomDrift = (Math.random() - 0.5) * 0.2;
-            
+
             s.value = Math.max(s.min, Math.min(s.max, s.value + pullToTarget + force + randomDrift));
             s.history.shift();
             s.history.push(s.value);
@@ -135,8 +135,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const checkWarnings = () => {
         machineControls.forEach(c => {
             const warningId = c.id;
-            if(c.value < 20 || c.value > 80) {
-                if(!activeWarnings.has(warningId)) {
+            if (c.value < 20 || c.value > 80) {
+                if (!activeWarnings.has(warningId)) {
                     activeWarnings.add(warningId);
                     const state = c.value > 80 ? 'aşırı yüksek' : 'çok düşük';
                     const msg = `Dikkat: ${c.name} ${state} kapasitede çalışıyor (%${c.value}). Grafikleri kontrol edin.`;
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     auroraRespond(`⚠️ Sistem Uyarı: ${c.name} cihazının gücü ${state} seviyede (%${c.value}) tespit edildi. Bu durum ilgili sensörlerde sert dalgalanmalara yol açıyor. Canlı grafikleri yakından izliyorum.`, true);
                 }
             } else {
-                if(activeWarnings.has(warningId)) {
+                if (activeWarnings.has(warningId)) {
                     activeWarnings.delete(warningId);
                     addLog(`${c.name} normal çalışma kapasitesine döndü.`, 'success');
                 }
@@ -155,15 +155,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==== 5. RENDERERS ====
     const renderSensorGrid = () => {
         const grid = document.getElementById('sensor-grid');
-        if(!grid) return;
+        if (!grid) return;
         grid.innerHTML = sensors.map(s => {
             const target = s.getTarget();
             let status = 'optimal';
             let statusText = 'OPTİMAL';
-            if (s.value < target.min - s.value*0.1 || s.value > target.max + s.value*0.1) { status = 'critical'; statusText = 'KRİTİK'; }
+            if (s.value < target.min - s.value * 0.1 || s.value > target.max + s.value * 0.1) { status = 'critical'; statusText = 'KRİTİK'; }
             else if (s.value < target.min || s.value > target.max) { status = 'warning'; statusText = 'UYARI'; }
 
-            const avg = (s.history.reduce((a,b)=>a+b,0) / s.history.length).toFixed(1);
+            const avg = (s.history.reduce((a, b) => a + b, 0) / s.history.length).toFixed(1);
             const minV = Math.min(...s.history).toFixed(1);
             const maxV = Math.max(...s.history).toFixed(1);
 
@@ -193,12 +193,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const drawSparkline = (id, data, color) => {
         const canvas = document.getElementById(id);
-        if(!canvas) return;
+        if (!canvas) return;
         const ctx = canvas.getContext('2d');
         const w = canvas.width = canvas.offsetWidth;
         const h = canvas.height = canvas.offsetHeight;
-        
-        ctx.clearRect(0,0,w,h);
+
+        ctx.clearRect(0, 0, w, h);
         const min = Math.min(...data);
         const max = Math.max(...data);
         const range = max - min || 1;
@@ -207,19 +207,19 @@ document.addEventListener('DOMContentLoaded', () => {
         data.forEach((val, i) => {
             const x = (i / (data.length - 1)) * w;
             const y = h - ((val - min) / range) * (h * 0.8) - (h * 0.1);
-            if(i === 0) ctx.moveTo(x, y);
+            if (i === 0) ctx.moveTo(x, y);
             else ctx.lineTo(x, y);
         });
-        
+
         ctx.strokeStyle = color;
         ctx.lineWidth = 2;
         ctx.lineJoin = 'round';
         ctx.stroke();
 
-        const grad = ctx.createLinearGradient(0,0,0,h);
+        const grad = ctx.createLinearGradient(0, 0, 0, h);
         grad.addColorStop(0, color + '60');
         grad.addColorStop(1, color + '00');
-        
+
         ctx.lineTo(w, h);
         ctx.lineTo(0, h);
         ctx.fillStyle = grad;
@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const renderRecipes = () => {
         const grid = document.getElementById('recipe-grid');
-        if(!grid) return;
+        if (!grid) return;
         grid.innerHTML = recipes.map(r => `
             <div class="recipe-card" onclick="app.setActiveRecipe('${r.id}')">
                 <div class="recipe-emoji">${r.emoji}</div>
@@ -251,10 +251,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const renderActiveRecipeSummary = () => {
         const title = document.getElementById('active-recipe-name');
         const summary = document.getElementById('recipe-summary');
-        if(!title || !summary) return;
-        
+        if (!title || !summary) return;
+
         title.textContent = activeRecipe.emoji + ' ' + activeRecipe.name;
-        
+
         const params = [
             { label: 'pH', sensor: 'ph', unit: '' },
             { label: 'Sıcaklık', sensor: 'temp', unit: '°C' },
@@ -277,12 +277,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const renderSystemGrid = () => {
         const grid = document.getElementById('system-grid');
-        if(!grid) return;
-        
+        if (!grid) return;
+
         const controlsHtml = machineControls.map(c => {
             let clz = '';
-            if(c.value > 80 || c.value < 20) clz = 'warning';
-            if(c.value > 90 || c.value < 10) clz = 'critical';
+            if (c.value > 80 || c.value < 20) clz = 'warning';
+            if (c.value > 90 || c.value < 10) clz = 'critical';
             return `
             <div class="control-slider-wrap">
                 <div class="control-header">
@@ -323,21 +323,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==== 6. LOGGER & AURORA AI ====
     const logFeed = document.getElementById('log-feed');
     const logs = [];
-    const addLog = (msg, type='info') => {
+    const addLog = (msg, type = 'info') => {
         const time = new Date().toLocaleTimeString('tr-TR', { hour12: false });
         logs.unshift({ time, msg, type });
-        if(logs.length > 50) logs.pop();
-        if(logFeed) {
-            logFeed.innerHTML = logs.slice(0,10).map(l => 
+        if (logs.length > 50) logs.pop();
+        if (logFeed) {
+            logFeed.innerHTML = logs.slice(0, 10).map(l =>
                 `<div class="log-entry ${l.type}"><span class="log-time">[${l.time}]</span><span class="log-msg">${l.msg}</span></div>`
             ).join('');
         }
-        
+
         // Broadcast to Notification Center
         let title = 'Sistem Bilgisi';
-        if(type === 'success') title = 'İşlem Başarılı';
-        if(type === 'warn') title = 'Sistem Uyarısı';
-        if(type === 'error') title = 'Kritik Durum';
+        if (type === 'success') title = 'İşlem Başarılı';
+        if (type === 'warn') title = 'Sistem Uyarısı';
+        if (type === 'error') title = 'Kritik Durum';
         addNotification(title, msg, type);
     };
 
@@ -347,7 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const renderChat = () => {
         const chatContainer = document.getElementById('chat-messages');
-        if(!chatContainer) return;
+        if (!chatContainer) return;
         chatContainer.innerHTML = auroraMessages.map(m => `
             <div class="message ${m.sender}">
                 ${m.sender === 'aurora' ? '<div class="msg-avatar">🌿</div>' : ''}
@@ -362,28 +362,99 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const auroraRespond = (userMsg, isAutoWarning = false) => {
         const time = new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-        
-        if(!isAutoWarning) {
+
+        if (!isAutoWarning) {
             auroraMessages.push({ sender: 'user', text: userMsg, time });
             renderChat();
         }
 
         setTimeout(() => {
             let reply = userMsg;
-            if(!isAutoWarning) {
-                const inputLower = userMsg.toLowerCase();
-                reply = "Şu anda şifreli beslemeyi izliyorum. Her şey en iyi seviyede ilerliyor. Analiz etmemi istediğiniz belirli bir parametre var mı?";
-                
-                if(inputLower.includes('ph')) reply = `Mevcut pH seviyesi ${sensors.find(s=>s.id==='ph').value.toFixed(1)}. Durumu uçtan uca şifreli izlemeye devam ediyorum.`;
-                else if(inputLower.includes('sıcaklık') || inputLower.includes('sicaklik') || inputLower.includes('ısı')) reply = `Sıcaklık grafiği şu an ${sensors.find(s=>s.id==='temp').value.toFixed(1)}°C gösteriyor. Değişimleri anlık izliyorum.`;
-                else if(inputLower.includes('güvenlik') || inputLower.includes('guvenlik') || inputLower.includes('şifre')) reply = `Veri gizliliğiniz benim en büyük önceliğim. Tüm veriler AES-256 ile korunmaktadır.`;
-                else if(inputLower.includes('tarif')) reply = `Şu anda ${activeRecipe.stage} aşamasında olan ${activeRecipe.name} tarifini uyguluyoruz.`;
-                else if(inputLower.includes('su') || inputLower.includes('nem')) reply = `Su seviyesi %${sensors.find(s=>s.id==='water').value.toFixed(0)} ve nem %${sensors.find(s=>s.id==='humidity').value.toFixed(1)}.`;
+            const inputLower = userMsg.toLowerCase();
+            let isCommand = false;
+
+            // 1. Navigation Commands
+            if (inputLower.match(/(panele|ana sayfa|dashboard|panel)/) && inputLower.match(/(geç|gec|git|aç|ac|dön|don|göster|goster)/)) {
+                setView('dashboard');
+                reply = "Ana panele yönlendiriyorum.";
+                isCommand = true;
+            } else if (inputLower.match(/(sistem|sistemi)/) && inputLower.match(/(geç|gec|git|aç|ac|dön|don|göster|goster)/)) {
+                setView('system');
+                reply = "Sistem sekmesini açıyorum.";
+                isCommand = true;
+            } else if (inputLower.match(/(tarif|tarifler|tarifleri)/) && inputLower.match(/(geç|gec|git|aç|ac|dön|don|göster|goster)/)) {
+                setView('recipes');
+                reply = "Tarifler sekmesine geçiyorum.";
+                isCommand = true;
+            }
+
+            // 2. Recipe Commands
+            if (!isCommand) {
+                const recipeMatch = inputLower.match(/(fesleğen|feslegen|marul|domates|biber)/);
+                if (recipeMatch && inputLower.match(/(başlat|baslat|geç|gec|uygula|seç|sec)/)) {
+                    const keyword = recipeMatch[1].replace('feslegen', 'fesleğen');
+                    const recipeIndex = recipes.findIndex(r => r.name.toLowerCase().includes(keyword));
+                    if (recipeIndex !== -1) {
+                        window.app.setActiveRecipe(recipes[recipeIndex].id);
+                        reply = `${recipes[recipeIndex].name} tarifini başlattım. Hedef değerleri ve aydınlatma döngüsünü bitkiye göre optimize ediyorum.`;
+                        isCommand = true;
+                    }
+                }
+            }
+
+            // 3. Hardware Control Commands
+            if (!isCommand) {
+                const deviceMatch = inputLower.match(/(ışık|isik|ışığı|isigi|aydın|aydin|fan|su|pompa|besin|ec|ph)/);
+                const valMatch = inputLower.match(/(\d+)/);
+                const actionMatch = inputLower.match(/(kapat|aç|ac|yap|ayarla|çalıştır|calistir|getir)/);
+
+                if (deviceMatch && (valMatch || actionMatch)) {
+                    let targetControlId = null;
+                    if (deviceMatch[1].includes('ışık') || deviceMatch[1].includes('isik') || deviceMatch[1].includes('aydın') || deviceMatch[1].includes('aydin')) targetControlId = 'light';
+                    else if (deviceMatch[1].includes('fan')) targetControlId = 'fan';
+                    else if (deviceMatch[1].includes('su') || deviceMatch[1].includes('pompa')) targetControlId = 'pump';
+                    else if (deviceMatch[1].includes('besin') || deviceMatch[1].includes('ec')) targetControlId = 'nutrient';
+                    else if (deviceMatch[1].includes('ph')) targetControlId = 'ph';
+
+                    if (targetControlId) {
+                        let val = 50;
+                        let actionStr = actionMatch ? actionMatch[1] : '';
+                        if (actionStr === 'kapat') val = 0;
+                        else if (actionStr === 'aç' || actionStr === 'ac' || actionStr === 'çalıştır' || actionStr === 'calistir') val = valMatch ? parseInt(valMatch[1]) : 100;
+                        else if (valMatch) val = parseInt(valMatch[1]);
+
+                        val = Math.max(0, Math.min(100, val));
+
+                        const slider = document.getElementById(`range-${targetControlId}`);
+                        if (slider) {
+                            slider.value = val;
+                            slider.dispatchEvent(new Event('input')); // Triggers updateControl and physics
+                        } else {
+                            // Fallback if system tab was never opened
+                            window.app.updateControl(targetControlId, val);
+                        }
+
+                        const controlName = machineControls.find(c => c.id === targetControlId).name;
+                        reply = `${controlName} %${val} seviyesine ayarlandı. Fiziksel simülasyon bu değişikliğe göre tepki verecek.`;
+                        isCommand = true;
+                    }
+                }
+            }
+
+            // 4. Fallback Information
+            if (!isCommand) {
+                reply = "Şu anda sistemi izliyorum. Her şey en iyi seviyede ilerliyor. Analiz etmemi istediğiniz belirli bir parametre var mı?";
+
+                if (inputLower.includes('ph')) reply = `Mevcut pH seviyesi ${sensors.find(s => s.id === 'ph').value.toFixed(1)}. Durumu uçtan uca şifreli izlemeye devam ediyorum.`;
+                else if (inputLower.includes('sıcaklık') || inputLower.includes('sicaklik') || inputLower.includes('ısı')) reply = `Sıcaklık grafiği şu an ${sensors.find(s => s.id === 'temp').value.toFixed(1)}°C gösteriyor. Değişimleri anlık izliyorum.`;
+                else if (inputLower.includes('güvenlik') || inputLower.includes('guvenlik') || inputLower.includes('şifre')) reply = `Veri gizliliğiniz benim en büyük önceliğim. Tüm veriler AES-256 ile korunmaktadır.`;
+                else if (inputLower.includes('tarif')) reply = `Şu anda ${activeRecipe.stage} aşamasında olan ${activeRecipe.name} tarifini uyguluyoruz.`;
+                else if (inputLower.includes('su') || inputLower.includes('nem')) reply = `Su seviyesi %${sensors.find(s => s.id === 'water').value.toFixed(0)} ve nem %${sensors.find(s => s.id === 'humidity').value.toFixed(1)}.`;
             }
 
             auroraMessages.push({ sender: 'aurora', text: reply, time: new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }) });
             renderChat();
-            
+
             // Notify user of Aurora's message
             addNotification('Aurora AI', reply, 'info');
 
@@ -392,14 +463,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('chat-send')?.addEventListener('click', () => {
         const input = document.getElementById('chat-input');
-        if(input.value.trim()) {
+        if (input.value.trim()) {
             auroraRespond(input.value.trim());
             input.value = '';
         }
     });
 
     document.getElementById('chat-input')?.addEventListener('keypress', (e) => {
-        if(e.key === 'Enter' && e.target.value.trim()) {
+        if (e.key === 'Enter' && e.target.value.trim()) {
             auroraRespond(e.target.value.trim());
             e.target.value = '';
         }
@@ -408,27 +479,27 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==== 7. MAIN CHART ENGINE ====
     const renderMainChart = () => {
         const canvas = document.getElementById('main-chart');
-        if(!canvas) return;
+        if (!canvas) return;
         const ctx = canvas.getContext('2d');
         const w = canvas.width = canvas.offsetWidth;
         const h = canvas.height = canvas.offsetHeight;
-        
-        ctx.clearRect(0,0,w,h);
-        
+
+        ctx.clearRect(0, 0, w, h);
+
         // Draw grid
         ctx.strokeStyle = 'rgba(0,0,0,0.05)';
         ctx.lineWidth = 1;
         ctx.beginPath();
-        for(let i=1; i<4; i++) {
-            const y = (h/4) * i;
+        for (let i = 1; i < 4; i++) {
+            const y = (h / 4) * i;
             ctx.moveTo(0, y);
             ctx.lineTo(w, y);
         }
         ctx.stroke();
 
         // Draw temp and humidity
-        const temp = sensors.find(s=>s.id==='temp');
-        const hum = sensors.find(s=>s.id==='humidity');
+        const temp = sensors.find(s => s.id === 'temp');
+        const hum = sensors.find(s => s.id === 'humidity');
 
         const drawSeries = (data, color, minOffset, maxOffset) => {
             const min = Math.min(...data) - minOffset;
@@ -439,7 +510,7 @@ document.addEventListener('DOMContentLoaded', () => {
             data.forEach((val, i) => {
                 const x = (i / (data.length - 1)) * w;
                 const y = h - ((val - min) / range) * (h * 0.8) - (h * 0.1);
-                if(i === 0) ctx.moveTo(x, y);
+                if (i === 0) ctx.moveTo(x, y);
                 else ctx.lineTo(x, y);
             });
             ctx.strokeStyle = color;
@@ -457,16 +528,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const viewId = hash.replace('#', '') || 'dashboard';
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        
+
         const viewEl = document.getElementById(`view-${viewId}`);
-        if(viewEl) viewEl.classList.add('active');
-        
+        if (viewEl) viewEl.classList.add('active');
+
         document.querySelectorAll(`.nav-item[data-view="${viewId}"]`).forEach(el => el.classList.add('active'));
 
-        if(viewId === 'dashboard') { renderDashboard(); renderMainChart(); }
-        else if(viewId === 'recipes') renderRecipes();
-        else if(viewId === 'chat') renderChat();
-        else if(viewId === 'system') renderSystemGrid();
+        if (viewId === 'dashboard') { renderDashboard(); renderMainChart(); }
+        else if (viewId === 'recipes') renderRecipes();
+        else if (viewId === 'chat') renderChat();
+        else if (viewId === 'system') renderSystemGrid();
     };
 
     const renderDashboard = () => {
@@ -483,17 +554,17 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         updateControl: (id, val) => {
             const ctrl = machineControls.find(c => c.id === id);
-            if(ctrl) {
+            if (ctrl) {
                 ctrl.value = parseInt(val);
                 const valEl = document.getElementById(`val-${id}`);
-                if(valEl) valEl.textContent = `${val}%`;
-                
+                if (valEl) valEl.textContent = `${val}%`;
+
                 const rangeEl = document.getElementById(`range-${id}`);
-                if(rangeEl) {
-                    if(val < 20 || val > 80) rangeEl.className = `control-range ${val > 90 || val < 10 ? 'critical' : 'warning'}`;
+                if (rangeEl) {
+                    if (val < 20 || val > 80) rangeEl.className = `control-range ${val > 90 || val < 10 ? 'critical' : 'warning'}`;
                     else rangeEl.className = 'control-range';
                 }
-                
+
                 // Add a notification specifically for manual override
                 addNotification('Manuel Müdahale', `${ctrl.name} kapasitesi %${val} olarak ayarlandı.`, 'info');
             }
@@ -505,28 +576,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // Boot sequence
     addLog('Sistem başlatıldı. Güvenli bağlantı kuruldu.', 'success');
     addLog('Tüm sensör kanallarında AES-256 şifreleme aktif.', 'info');
-    
+
     let progress = 0;
     const bootInterval = setInterval(() => {
         progress += Math.random() * 20;
-        if(progress > 100) progress = 100;
+        if (progress > 100) progress = 100;
         document.getElementById('boot-progress-bar').style.width = `${progress}%`;
-        
+
         const statusMsgs = [
-            'Aurora Başlatılıyor...', 
-            'Uçtan Uca Şifreleme Kuruluyor...', 
-            'Sensörlerle İletişim Sağlanıyor...', 
-            'Dinamik Fizik Motoru Yükleniyor...', 
+            'Aurora Başlatılıyor...',
+            'Uçtan Uca Şifreleme Kuruluyor...',
+            'Sensörlerle İletişim Sağlanıyor...',
+            'Dinamik Fizik Motoru Yükleniyor...',
             'Sistem Hazır.'
         ];
-        document.getElementById('boot-status').textContent = statusMsgs[Math.floor(progress/25)];
+        document.getElementById('boot-status').textContent = statusMsgs[Math.floor(progress / 25)];
 
-        if(progress === 100) {
+        if (progress === 100) {
             clearInterval(bootInterval);
             setTimeout(() => {
                 document.getElementById('boot-overlay').classList.add('done');
                 setView(window.location.hash);
-                
+
                 // Start live data loop
                 setInterval(() => {
                     updateSensors();
