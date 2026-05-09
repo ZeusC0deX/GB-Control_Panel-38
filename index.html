@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description"
+    content="GreenBox — Aurora AI destekli Akıllı IoT Bitki İzleme Paneli. Gerçek zamanlı sensör analitiği, büyüme tarifi optimizasyonu ve uçtan uca şifreli veri.">
+  <title>GreenBox — Aurora Kontrol Paneli</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+
+  <!-- Boot Overlay -->
+  <div class="boot-overlay" id="boot-overlay">
+    <div class="boot-logo">🌿</div>
+    <h1 class="boot-title">GreenBox</h1>
+    <p class="boot-status" id="boot-status">Aurora Başlatılıyor...</p>
+    <div class="boot-progress">
+      <div class="boot-progress-bar" id="boot-progress-bar"></div>
+    </div>
+  </div>
+
+
+
+  <!-- Main Content -->
+  <div class="main-content">
+
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="greeting">
+          <h2 id="greeting-text">Merhaba, Yönetici</h2>
+          <p class="aurora-subtitle" id="aurora-subtitle">Aurora izliyor · Tüm kanallar şifreli</p>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <span class="datetime" id="datetime"></span>
+        <div class="notif-wrapper">
+          <button class="notif-btn" id="notif-btn" title="Bildirimler">
+            🔔
+            <span class="notif-badge" id="notif-badge" style="display: none;">0</span>
+          </button>
+          <div class="notif-dropdown" id="notif-dropdown">
+            <div class="notif-header">
+              <h4>Bildirim Merkezi</h4>
+              <button id="notif-clear">Tümünü Sil</button>
+            </div>
+            <div class="notif-list" id="notif-list">
+              <div class="notif-empty" id="notif-empty">Henüz bildirim yok.</div>
+            </div>
+          </div>
+        </div>
+        <span class="topbar-lock" title="Uçtan Uca Şifreli">🔒</span>
+      </div>
+    </header>
+
+    <!-- Views Container -->
+    <div class="views-container">
+
+      <!-- DASHBOARD VIEW -->
+      <section class="view active" id="view-dashboard">
+        <div class="sensor-grid" id="sensor-grid"></div>
+        <div class="dashboard-bottom">
+          <div class="panel" id="chart-panel">
+            <div class="panel-header">
+              <span class="panel-title">24 Saatlik Çevresel Özet</span>
+              <span class="panel-badge">🔒 Canlı · Şifreli</span>
+            </div>
+            <canvas id="main-chart"></canvas>
+          </div>
+          <div class="side-panels">
+            <div class="panel" id="recipe-panel">
+              <div class="panel-header">
+                <span class="panel-title">Aktif Tarif</span>
+                <span class="panel-badge" id="active-recipe-name">—</span>
+              </div>
+              <div id="recipe-summary"></div>
+            </div>
+            <div class="panel" id="log-panel">
+              <div class="panel-header">
+                <span class="panel-title">Sistem Günlüğü</span>
+                <span class="panel-badge">Canlı</span>
+              </div>
+              <div class="log-feed" id="log-feed"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RECIPES VIEW -->
+      <section class="view" id="view-recipes">
+        <div class="recipe-grid" id="recipe-grid"></div>
+      </section>
+
+      <!-- CHAT VIEW -->
+      <section class="view" id="view-chat">
+        <div class="chat-container">
+          <div class="chat-header">
+            <div class="aurora-avatar">🌿</div>
+            <div class="aurora-info">
+              <h3>Aurora</h3>
+              <span class="aurora-online">Sistemde aktif</span>
+            </div>
+          </div>
+          <div class="chat-messages" id="chat-messages"></div>
+          <div class="chat-input-area">
+            <input type="text" id="chat-input" placeholder="Bahçeniz hakkında Aurora'ya her şeyi sorun..."
+              autocomplete="off" />
+            <button id="chat-send" title="Gönder">➤</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SYSTEM VIEW -->
+      <section class="view" id="view-system">
+        <div class="system-grid" id="system-grid"></div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Mobile Bottom Nav -->
+  <nav class="mobile-nav">
+    <a href="#dashboard" class="nav-item active" data-view="dashboard">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1" />
+        <rect x="14" y="3" width="7" height="7" rx="1" />
+        <rect x="3" y="14" width="7" height="7" rx="1" />
+        <rect x="14" y="14" width="7" height="7" rx="1" />
+      </svg>
+      Panel
+    </a>
+    <a href="#recipes" class="nav-item" data-view="recipes">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2C8 6 4 10 4 14a8 8 0 1016 0c0-4-4-8-8-12z" />
+        <path d="M12 10v8" />
+        <path d="M9 13l3-3 3 3" />
+      </svg>
+      Tarifler
+    </a>
+    <a href="#chat" class="nav-item" data-view="chat">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+      </svg>
+      Sohbet
+    </a>
+    <a href="#system" class="nav-item" data-view="system">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      </svg>
+      Sistem
+    </a>
+  </nav>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
