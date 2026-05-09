@@ -98,6 +98,15 @@ body {
   }
 }
 
+/* Anti-aliasing and rendering for high-DPI displays */
+canvas, img, svg {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+svg {
+  shape-rendering: geometricPrecision;
+}
+
 ::-webkit-scrollbar {
   width: 0.25rem;
 }
@@ -199,7 +208,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-md) var(--space-md);
+  padding: calc(env(safe-area-inset-top) + var(--space-md)) var(--space-md) var(--space-md);
   border-bottom: 1px solid var(--border-subtle);
   position: sticky;
   top: 0;
