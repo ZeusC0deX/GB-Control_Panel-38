@@ -45,8 +45,6 @@
   --transition-slow: 500ms ease;
 
   /* Perfect dynamic scaling logic for ANY resolution */
-  --app-width: min(100vw, 100vh * 9 / 16);
-  --app-height: min(100vh, 100vw * 16 / 9);
 }
 
 *,
@@ -58,26 +56,42 @@
 }
 
 html {
-  /* Base font size scales exactly with the 9:16 app width */
-  font-size: clamp(12px, calc(var(--app-width) * 0.038), 28px);
+  /* Fluid font scaling for mobile, capped for desktop */
+  font-size: clamp(14px, 4vw, 18px);
   background: #0a0a0a;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  /* Use dynamic viewport height (dvh) for mobile browsers */
+  min-height: 100dvh;
+  /* Prevent overscroll bounce on mobile natively */
+  overscroll-behavior-y: none;
 }
 
 body {
   font-family: var(--font-ui);
   background: var(--bg-primary);
   color: var(--text-primary);
-  width: var(--app-width);
-  height: var(--app-height);
+  
+  /* PWA Mobile Optimization: take full screen on mobile */
+  width: 100%;
+  max-width: 500px; /* Cap width for desktop view */
+  height: 100dvh;
+  
   position: relative;
   overflow: hidden;
   box-shadow: 0 0 3rem rgba(0, 0, 0, 0.8);
   display: flex;
   flex-direction: column;
+}
+
+/* Desktop Mockup Fallback: Make it look like a phone if viewed on PC */
+@media (min-width: 501px) {
+  body {
+    height: 90vh;
+    max-height: 900px;
+    border-radius: var(--radius-xl);
+  }
 }
 
 ::-webkit-scrollbar {
