@@ -195,8 +195,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const canvas = document.getElementById(id);
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
-        const w = canvas.width = canvas.offsetWidth;
-        const h = canvas.height = canvas.offsetHeight;
+        const rect = canvas.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        ctx.scale(dpr, dpr);
+        
+        const w = rect.width;
+        const h = rect.height;
 
         ctx.clearRect(0, 0, w, h);
         const min = Math.min(...data);
@@ -481,8 +488,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const canvas = document.getElementById('main-chart');
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
-        const w = canvas.width = canvas.offsetWidth;
-        const h = canvas.height = canvas.offsetHeight;
+        const rect = canvas.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        ctx.scale(dpr, dpr);
+        
+        const w = rect.width;
+        const h = rect.height;
 
         ctx.clearRect(0, 0, w, h);
 

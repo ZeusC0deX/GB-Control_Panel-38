@@ -58,10 +58,10 @@
 html {
   /* Fluid font scaling for mobile, capped for desktop */
   font-size: clamp(14px, 4vw, 18px);
-  background: #0a0a0a;
+  background: var(--bg-primary);
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   /* Use dynamic viewport height (dvh) for mobile browsers */
   min-height: 100dvh;
   /* Prevent overscroll bounce on mobile natively */
@@ -87,6 +87,10 @@ body {
 
 /* Desktop Mockup Fallback: Make it look like a phone if viewed on PC */
 @media (min-width: 501px) {
+  html {
+    background: #0a0a0a;
+    align-items: center;
+  }
   body {
     height: 90vh;
     max-height: 900px;
